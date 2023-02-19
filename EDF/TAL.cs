@@ -8,24 +8,44 @@ using System.Threading.Tasks;
 namespace EDFCSharp
 {
     /// <summary>
-    /// Represents a Time-stamped Annotation (TAL)
+    /// Represents a Time-stamped Annotations List (TAL)
     /// </summary>
     public class TAL
     {
         private const string StringDoubleFormat = "0.###";
-        //Standard TAL separators
+        /// <summary>
+        /// Character used for separating onset and duration
+        /// </summary>
         public static readonly byte byte_21 = BitConverter.GetBytes(21)[0];
+        /// <summary>
+        /// Character used for separating annotations
+        /// </summary>
         public static readonly byte byte_20 = BitConverter.GetBytes(20)[0];
+        /// <summary>
+        /// Character used for ending the list of annotations
+        /// </summary>
         public static readonly byte byte_0 = BitConverter.GetBytes(0)[0];
+        /// <summary>
+        /// Character '.' used for separating the whole and fractional parts of a number
+        /// </summary>
         public static readonly byte byte_46 = BitConverter.GetBytes(46)[0];
 
 
         private double startSeconds;
         private double durationSeconds;
+        /// <summary>
+        /// Onset must start with a '+' or a '-' character and specifies the amount of seconds by which the onset of the annotated event follows ('+') or precedes ('-') the startdate/time of the file, that is specified in the header.
+        /// </summary>
         public string StartSecondsString => startSeconds < 0 ?
             $"{startSeconds.ToString(StringDoubleFormat, CultureInfo.InvariantCulture)}" :
             $"+{startSeconds.ToString(StringDoubleFormat, CultureInfo.InvariantCulture)}";
+        /// <summary>
+        /// Duration is optional and specifies the duration of the annotated event in seconds. If the duration is not specified, the duration is assumed to be zero.
+        /// </summary>
         public string DurationSecondsString => durationSeconds >= 0 ? durationSeconds.ToString(StringDoubleFormat, CultureInfo.InvariantCulture) : null;
+        /// <summary>
+        /// A list of annotations all sharing the same Onset and Duration may follow. The annotations are separated by a single space character (ASCII 20h) and the list ends with a single end-of-list character (ASCII 00h).
+        /// </summary>
         public string AnnotationDescription { get; private set; }
 
         public TAL(double startSeconds, double durationSeconds, string description)
@@ -58,13 +78,14 @@ namespace EDFCSharp
 #if NET
             return HashCode.Combine(startSeconds, durationSeconds, AnnotationDescription);
 #else
-return 0;
+            return 0;
 #endif
         }
     }
 
-
-
+    /// <summary>
+    /// Class to generate and read TALs from bytes
+    /// </summary>
     public static class TALExtensions
     {
         /// <summary>
@@ -88,7 +109,6 @@ return 0;
             result.Add(TAL.byte_0);
             return result.ToArray();
         }
-
         public static List<TAL> BytesToTALs(byte[] raw)
         {
             List<TAL> result = new List<TAL>();
@@ -248,7 +268,6 @@ return 0;
             result.Add(TAL.byte_20);
             result.Add(TAL.byte_0);
             return result.ToArray();
-
         }
     }
 }

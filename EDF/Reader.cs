@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -7,6 +8,9 @@ using System.Text;
 
 namespace EDFCSharp
 {
+    /// <summary>
+    /// EDF+ file reader
+    /// </summary>
     internal class Reader : BinaryReader
     {
         public Reader(FileStream fs) : base(fs) { }
@@ -109,7 +113,7 @@ namespace EDFCSharp
                     // Read that signal samples
                     if (i == signal.Index)
                     {
-                        ReadNextSignalSamples(signal,current);
+                        ReadNextSignalSamples(signal, current);
                     }
                     else
                     {
@@ -160,7 +164,7 @@ namespace EDFCSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ReadNextSignalSamples(EDFSignal signal, long currentTimestamp)
         {
-            var interval =(long) (signal.FrequencyInHZ == 0 ? 0 : (1000 / signal.FrequencyInHZ));
+            var interval = (long)(signal.FrequencyInHZ == 0 ? 0 : (1000 / signal.FrequencyInHZ));
             var sampleCount = signal.NumberOfSamplesInDataRecord.Value;
             var scaleFactor = signal.ScaleFactor();
             // Single file read operation per record
@@ -203,7 +207,10 @@ namespace EDFCSharp
             string strInt = ReadAscii(itemInfo).Trim();
             short intResult = -1;
             try { intResult = Convert.ToInt16(strInt); }
-            catch (Exception ex) { Console.WriteLine("Error, could not convert string to integer. " + ex.Message); }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error, could not convert string to integer. " + ex.Message);
+            }
             return intResult;
         }
 
@@ -228,7 +235,7 @@ namespace EDFCSharp
             }
             catch (FormatException ex)
             {
-                Console.WriteLine("Error, could not convert string to integer: " + ex.Message);
+                Debug.WriteLine("Error, could not convert string to integer: " + ex.Message);
                 return -1;
             }
         }

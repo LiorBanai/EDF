@@ -4,29 +4,92 @@ using System.Reflection.Emit;
 
 namespace EDFCSharp
 {
+    /// <summary>
+    /// Header of the EDF (European Data Format) file
+    /// </summary>
     public class EDFHeader
     {
         public DateTime StartTime { get; }
         public DateTime EndTime { get; }
+        /// <summary>
+        /// Version of this data format ("0")
+        /// </summary>
         public FixedLengthString Version { get; }
+        /// <summary>
+        /// Local patient identification
+        /// </summary>
         public FixedLengthString PatientID { get; }
+        /// <summary>
+        /// Local recording identification
+        /// </summary>
         public FixedLengthString RecordID { get; }
+        /// <summary>
+        /// Start date of recording (dd.mm.yy)
+        /// </summary>
         public FixedLengthString RecordingStartDate { get; }
+        /// <summary>
+        /// Start time of recording (hh.mm.ss)
+        /// </summary>
         public FixedLengthString RecordingStartTime { get; }
+        /// <summary>
+        /// Number of bytes in header record
+        /// </summary>
         public FixedLengthInt SizeInBytes { get; }
+        /// <summary>
+        /// 44-byte long reserved section ("EDF+D" for EDF+)
+        /// </summary>
         public FixedLengthString Reserved { get; }
+        /// <summary>
+        /// Number of data records (-1 if unknown)
+        /// </summary>
         public FixedLengthLong NumberOfDataRecords { get; }
+        /// <summary>
+        /// Duration of a data record, in seconds
+        /// </summary>
         public FixedLengthDouble RecordDurationInSeconds { get; }
+        /// <summary>
+        /// Number of signals (ns) in data record
+        /// </summary>
         public FixedLengthInt NumberOfSignalsInRecord { get; }
+        /// <summary>
+        /// Labels of the signals, concatenated
+        /// </summary>
         public VariableLengthString Labels { get; }
+        /// <summary>
+        /// Transducer types of the signals, concatenated (e.g. "AgAgCl electrode")
+        /// </summary>
         public VariableLengthString TransducerTypes { get; }
+        /// <summary>
+        /// Physical dimensions/units of the signals, concatenated (e.g. "uV")
+        /// </summary>
         public VariableLengthString PhysicalDimensions { get; }
+        /// <summary>
+        /// Physical minimums in units of PhysicalDimension, concatenated (e.g. "-500")
+        /// </summary>
         public VariableLengthDouble PhysicalMinimums { get; }
+        /// <summary>
+        /// Physical maximums in units of PhysicalDimension, concatenated (e.g. "500")
+        /// </summary>
         public VariableLengthDouble PhysicalMaximums { get; }
+        /// <summary>
+        /// Digital minimums, concatenated (e.g. "-2048")
+        /// </summary>
         public VariableLengthInt DigitalMinimums { get; }
+        /// <summary>
+        /// Digital maximums, concatenated (e.g. "2047")
+        /// </summary>
         public VariableLengthInt DigitalMaximums { get; }
+        /// <summary>
+        /// Prefilterings, concatenated (e.g. "HP:0.1Hz LP:75Hz")
+        /// </summary>
         public VariableLengthString PreFilterings { get; }
+        /// <summary>
+        /// Number of samples in each data record, concatenated (e.g. "1000")
+        /// </summary>
         public VariableLengthInt NumberOfSamplesPerRecord { get; }
+        /// <summary>
+        /// 32-byte long reserved section, concatenated
+        /// </summary>
         public VariableLengthString SignalsReserved { get; }
         public double TotalDurationInSeconds => NumberOfDataRecords.Value * RecordDurationInSeconds.Value;
 
@@ -61,24 +124,24 @@ namespace EDFCSharp
         {
             Version.Value = version;
             PatientID.Value = patientId;
-            RecordID . Value = recordId;
+            RecordID.Value = recordId;
             RecordingStartDate.Value = recordingStartDate;
             RecordingStartTime.Value = recordingStartTime;
             SizeInBytes.Value = sizeInBytes;
             Reserved.Value = reserved;
             NumberOfDataRecords.Value = numberOfDataRecords;
             RecordDurationInSeconds.Value = recordDurationInSeconds;
-            NumberOfSignalsInRecord .Value = numberOfSignalsInRecord;
-            Labels. Value = labels;
-            TransducerTypes .Value = transducerTypes;
-            PhysicalDimensions .Value = physicalDimensions;
-            PhysicalMinimums .Value = physicalMinimums;
+            NumberOfSignalsInRecord.Value = numberOfSignalsInRecord;
+            Labels.Value = labels;
+            TransducerTypes.Value = transducerTypes;
+            PhysicalDimensions.Value = physicalDimensions;
+            PhysicalMinimums.Value = physicalMinimums;
             PhysicalMaximums.Value = physicalMaximums;
-            DigitalMinimums . Value = digitalMinimums;
-            DigitalMaximums .Value = digitalMaximums;
-            PreFilterings .Value = preFilterings;
-            NumberOfSamplesPerRecord . Value = numberOfSamplesPerRecord;
-            SignalsReserved .Value = signalsReserved;
+            DigitalMinimums.Value = digitalMinimums;
+            DigitalMaximums.Value = digitalMaximums;
+            PreFilterings.Value = preFilterings;
+            NumberOfSamplesPerRecord.Value = numberOfSamplesPerRecord;
+            SignalsReserved.Value = signalsReserved;
             StartTime = GetDateTime(RecordingStartDate.Value, RecordingStartTime.Value);
             EndTime = StartTime.AddSeconds(TotalDurationInSeconds);
         }
@@ -177,25 +240,30 @@ namespace EDFCSharp
 
             strOutput += "\n-----------------------------------\n";
 
-            //Console.WriteLine();
-
             return strOutput;
         }
 
         protected bool Equals(EDFHeader other)
         {
             return StartTime.Equals(other.StartTime) && EndTime.Equals(other.EndTime) &&
-                   Equals(Version, other.Version) && Equals(PatientID, other.PatientID) &&
-                   Equals(RecordID, other.RecordID) && Equals(RecordingStartDate, other.RecordingStartDate) &&
-                   Equals(RecordingStartTime, other.RecordingStartTime) && Equals(SizeInBytes, other.SizeInBytes) &&
-                   Equals(Reserved, other.Reserved) && Equals(NumberOfDataRecords, other.NumberOfDataRecords) &&
+                   Equals(Version, other.Version) && 
+                   Equals(PatientID, other.PatientID) &&
+                   Equals(RecordID, other.RecordID) && 
+                   Equals(RecordingStartDate, other.RecordingStartDate) &&
+                   Equals(RecordingStartTime, other.RecordingStartTime) && 
+                   Equals(SizeInBytes, other.SizeInBytes) &&
+                   Equals(Reserved, other.Reserved) && 
+                   Equals(NumberOfDataRecords, other.NumberOfDataRecords) &&
                    Equals(RecordDurationInSeconds, other.RecordDurationInSeconds) &&
-                   Equals(NumberOfSignalsInRecord, other.NumberOfSignalsInRecord) && Equals(Labels, other.Labels) &&
+                   Equals(NumberOfSignalsInRecord, other.NumberOfSignalsInRecord) && 
+                   Equals(Labels, other.Labels) &&
                    Equals(TransducerTypes, other.TransducerTypes) &&
                    Equals(PhysicalDimensions, other.PhysicalDimensions) &&
                    Equals(PhysicalMinimums, other.PhysicalMinimums) &&
-                   Equals(PhysicalMaximums, other.PhysicalMaximums) && Equals(DigitalMinimums, other.DigitalMinimums) &&
-                   Equals(DigitalMaximums, other.DigitalMaximums) && Equals(PreFilterings, other.PreFilterings) &&
+                   Equals(PhysicalMaximums, other.PhysicalMaximums) && 
+                   Equals(DigitalMinimums, other.DigitalMinimums) &&
+                   Equals(DigitalMaximums, other.DigitalMaximums) && 
+                   Equals(PreFilterings, other.PreFilterings) &&
                    Equals(NumberOfSamplesPerRecord, other.NumberOfSamplesPerRecord) &&
                    Equals(SignalsReserved, other.SignalsReserved);
         }

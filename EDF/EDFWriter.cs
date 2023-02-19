@@ -61,13 +61,13 @@ namespace EDFCSharp
             var reservedValues = edf.Signals.Select(s => s.Reserved);
             WriteItem(reservedValues);
 
-            Console.WriteLine("Writer position after header: " + BaseStream.Position);
+            Debug.WriteLine("Writer position after header: " + BaseStream.Position);
 
-            Console.WriteLine("Writing signals.");
+            Debug.WriteLine($"Writing {edf.Signals.Length} signal(s).");
             WriteSignals(edf);
 
             Close();
-            Console.WriteLine("File size: " + new FileInfo(edfFilePath).Length);
+            Debug.WriteLine("File size: " + new FileInfo(edfFilePath).Length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -131,7 +131,7 @@ namespace EDFCSharp
         {
             if (!edf.Signals.Any() && !edf.AnnotationSignals.Any())
             {
-                Console.WriteLine("There are no signals to write");
+                Debug.WriteLine("There are no signals to write");
                 return;
             }
             long numberOfRecords = edf.Header.NumberOfDataRecords.Value;
@@ -180,11 +180,11 @@ namespace EDFCSharp
             //Fills block size left with 0
             var blockSize = sampleCountPerRecord * 2;
 #if TRACE_BYTES
-            Console.WriteLine($"Total bytes for Annotation index {0} is {bytesWritten}");
+            Debug.WriteLine($"Total bytes for Annotation index {0} is {bytesWritten}");
 #endif
             Debug.Assert(bytesWritten <= blockSize, "Annotation signal too big for NumberOfSamplesInDataRecord");
 #if TRACE_BYTES
-            Console.WriteLine($"Filling with {blockSize - bytesWritten} bytes");
+            Debug.WriteLine($"Filling with {blockSize - bytesWritten} bytes");
 #endif
             for (int i = bytesWritten; i < blockSize; i++)
                 Write(TAL.byte_0);

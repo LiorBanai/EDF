@@ -5,9 +5,18 @@ using System.Linq;
 
 namespace EDFCSharp
 {
+    /// <summary>
+    /// EDF (European Data Format) file
+    /// </summary>
     public class EDFFile : IDisposable
     {
+        /// <summary>
+        /// EDF Header
+        /// </summary>
         public EDFHeader Header { get; private set; }
+        /// <summary>
+        /// EDF Signals
+        /// </summary>
         public EDFSignal[] Signals { get; private set; }
         public List<AnnotationSignal> AnnotationSignals { get; private set; }
         public List<TAL> AllAnnotations => AnnotationSignals.SelectMany(a => a.Samples).ToList();
@@ -72,7 +81,6 @@ namespace EDFCSharp
             Reader = new Reader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
             Header = Reader.ReadHeader();
             Signals = Reader.AllocateSignals(Header);
-
         }
 
         /// <summary>

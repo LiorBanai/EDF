@@ -4,6 +4,11 @@ using System.Linq;
 
 namespace EDFCSharp
 {
+    /// <summary>
+    /// Ordinary signal representing a single channel of data stored in the EDF+ file.
+    /// Ordinary signals can be recorded from different sources (e.g. "EEG FP7", "EEG C3", "DC01").
+    /// They are all have a fixed number of samples in each data record. Data records usually represent a fixed time interval and they are stored predetermined, ordered sequence in the EDF file.
+    /// </summary>
     public class EDFSignal : IEDFBaseSignal<short>
     {
         private List<DateTimeOffset> _times;
@@ -51,7 +56,7 @@ namespace EDFCSharp
 
         public EDFSignal()
         {
-            
+
         }
         public EDFSignal(int index, double frequencyInHz)
         {
@@ -77,9 +82,9 @@ namespace EDFCSharp
                 + string.Join(",", Samples.Skip(0).Take(10).ToArray()) + " ...]";
         }
 
-        public void CalculateAllTimeStamps(DateTime startTime,double frequency, long totalSamples)
+        public void CalculateAllTimeStamps(DateTime startTime, double frequency, long totalSamples)
         {
-            
+
         }
 
         protected bool Equals(EDFSignal other)

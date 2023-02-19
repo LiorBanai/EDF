@@ -76,6 +76,11 @@ namespace EDFCSharp
         {
             return (Value != null ? Value.GetHashCode() : 0);
         }
+
+        public override string ToString()
+        {
+            return ToAscii();
+        }
     }
     public class FixedLengthInt : HeaderItem
     {
@@ -100,6 +105,11 @@ namespace EDFCSharp
         {
             return Value;
         }
+
+        public override string ToString()
+        {
+            return ToAscii();
+        }
     }
     public class FixedLengthLong : HeaderItem
     {
@@ -123,6 +133,11 @@ namespace EDFCSharp
         public override int GetHashCode()
         {
             return Value.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return ToAscii();
         }
     }
     public class FixedLengthDouble : HeaderItem
@@ -155,6 +170,11 @@ namespace EDFCSharp
         public override int GetHashCode()
         {
             return Value.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return ToAscii();
         }
     }
 
@@ -205,6 +225,11 @@ namespace EDFCSharp
         public override int GetHashCode()
         {
             return (Value != null ? Value.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return ToAscii();
         }
     }
 
@@ -257,6 +282,11 @@ namespace EDFCSharp
         {
             return (Value != null ? Value.GetHashCode() : 0);
         }
+
+        public override string ToString()
+        {
+            return ToAscii();
+        }
     }
 
     public class VariableLengthDouble : HeaderItem
@@ -307,6 +337,11 @@ namespace EDFCSharp
         public override int GetHashCode()
         {
             return (Value != null ? Value.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return ToAscii();
         }
     }
 

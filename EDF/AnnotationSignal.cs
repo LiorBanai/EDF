@@ -6,6 +6,10 @@ using System.Text;
 
 namespace EDFCSharp
 {
+    /// <summary>
+    /// Annotation signal representing annotations in the EDF+ file ("EDF Annotations").
+    /// Non-annotation signal time offsets are also stored in the annotations signal as the first items in their TALs.
+    /// </summary>
     public class AnnotationSignal : IEDFBaseSignal<TAL>
     {
         /// <summary>
