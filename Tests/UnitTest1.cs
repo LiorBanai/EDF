@@ -143,10 +143,24 @@ namespace EDFSharpTests
 
             string file2 = "test2.edf";
             edf.Save(file2);
+
             var edf2 = new EDFFile(file2);
-            Assert.IsTrue(edf2.Header.Equals(edf.Header));
-            Assert.IsTrue(edf2.Signals.SequenceEqual(edf.Signals));
-            Assert.IsTrue(edf2.AnnotationSignals.SequenceEqual(edf.AnnotationSignals));
+            Assert.IsTrue( edf2.Header.Equals( edf.Header ),          "Saved Header does not match original" );
+            Assert.IsTrue( edf2.Signals.SequenceEqual( edf.Signals ), "Saved Signals do not match original" );
+            Assert.AreEqual( edf.AnnotationSignals.Count, edf2.AnnotationSignals.Count, "Saved file contains a different number of Annotation Signals than original." );
+            
+            for( int i = 0; i < edf.AnnotationSignals.Count; i++ )
+            {
+                var original = edf.AnnotationSignals[ i ];
+                var compare  = edf2.AnnotationSignals[ i ];
+
+                Assert.IsTrue( original.SamplesCount == compare.SamplesCount, "Annotation signals contain a differing number of samples" );
+
+                for( int j = 0; j < original.SamplesCount; j++ )
+                {
+                    Assert.AreEqual( original.Samples[ j ].ToString().Trim(), compare.Samples[ j ].ToString().Trim(), false, "Stored Annotation samples differ" );
+                }
+            }
         }
         [TestMethod]
         public void ReadAnnotationAndSignalsFile()

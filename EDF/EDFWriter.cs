@@ -170,15 +170,24 @@ namespace EDFCSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void WriteAnnotations(int index, List<TAL> annotations, int sampleCountPerRecord)
         {
+            var blockSize = sampleCountPerRecord * 2;
+
             var bytesWritten = 0;
             bytesWritten += WriteAnnotationIndex(index);
-            if (index < annotations.Count)
+            while (index < annotations.Count)
             {
+                // Ensure that the TAL does not span more than a single Data Record
+                var bytesToWrite = TALExtensions.GetByteSize( annotations[ index ] );
+                if( bytesWritten + bytesToWrite > blockSize )
+                {
+                    break;
+                }
+
                 bytesWritten += WriteAnnotation(annotations[index]);
+                index        += 1;
             }
 
             //Fills block size left with 0
-            var blockSize = sampleCountPerRecord * 2;
 #if TRACE_BYTES
             Debug.WriteLine($"Total bytes for Annotation index {0} is {bytesWritten}");
 #endif

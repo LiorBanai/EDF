@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -89,25 +90,55 @@ namespace EDFCSharp
     public static class TALExtensions
     {
         /// <summary>
-        /// Returns a byte array witch represent a TAL format according to
+        /// Returns a byte array which represent a TAL format according to
         /// https://www.edfplus.info/specs/edfplus.html#annotationssignal section 2.2.2.
         /// </summary>
         /// <param name="tal"></param>
         /// <returns></returns>
         public static byte[] GetBytes(TAL tal)
         {
-            List<byte> result = new List<byte>();
+            var size = GetByteSize( tal );
+            List<byte> result = new List<byte>( size );
+            
             result.AddRange(Encoding.ASCII.GetBytes(tal.StartSecondsString));
+            
             if (tal.DurationSecondsString != null)
             {
                 result.Add(TAL.byte_21); //15 in HEX
                 result.AddRange(Encoding.ASCII.GetBytes(tal.DurationSecondsString));
             }
+            
             result.Add(TAL.byte_20);
             result.AddRange(Encoding.ASCII.GetBytes(tal.AnnotationDescription));
             result.Add(TAL.byte_20);
             result.Add(TAL.byte_0);
+            
+            Debug.Assert( result.Count == size, $"Mismatch between {nameof(GetByteSize)}() and actual number of bytes written" );
+            
             return result.ToArray();
+        }
+        
+        /// <summary>
+        /// Returns the number of bytes needed to write a TAL to a Data Record. Used to ensure that
+        /// a TAL does not exceed the end of a Data Record.
+        /// </summary>
+        /// <param name="tal"></param>
+        /// <returns></returns>
+        public static int GetByteSize( TAL tal )
+        {
+            int size = tal.StartSecondsString.Length;
+            
+            if( tal.DurationSecondsString != null )
+            {
+                size += 1; // TAL.byte_21, 15 HEX
+                size += tal.DurationSecondsString.Length;
+            }
+            
+            size += 1; // TAL.byte_20
+            size += tal.AnnotationDescription.Length;
+            size += 2; // TAL.byte20, TAL.byte_0
+
+            return size;
         }
         public static List<TAL> BytesToTALs(byte[] raw)
         {
