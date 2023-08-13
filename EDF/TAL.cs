@@ -13,7 +13,7 @@ namespace EDFCSharp
     /// </summary>
     public class TAL
     {
-        private const string StringDoubleFormat = "0.###";
+        private const string StringDoubleFormat = "0.########";
         /// <summary>
         /// Character used for separating onset and duration
         /// </summary>
