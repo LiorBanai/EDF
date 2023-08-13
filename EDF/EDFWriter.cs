@@ -30,35 +30,65 @@ namespace EDFCSharp
             WriteItem(edf.Header.RecordDurationInSeconds);
             WriteItem(edf.Header.NumberOfSignalsInRecord);
 
+            // When re-saving an existing file, there will already be a Signal file corresponding 
+            // to the Annotations in the Signals array. However, when saving a new file with annotations, 
+            // that dummy Signal will not exist, so we will need to concatenate all of the appropriate 
+            // fields. This is an artifact of how the design of the library separates regular Signals and 
+            // AnnotationSignals into similar but uncompatible types, and would be better resolved by
+            // unifying that design, but this workaround gets the job done. 
+            bool concatAnnotationsSignal = 
+                edf.AnnotationSignals.Count > 0 && 
+                !edf.Signals.Any(s => s.Label.Value.Equals(EDFConstants.AnnotationLabel));
+
             //----------------- Variable length header items -----------------
             var headerSignalsLabel = edf.Signals.Select(s => s.Label);
+            if( concatAnnotationsSignal )
+                headerSignalsLabel = headerSignalsLabel.Concat(edf.AnnotationSignals.Select(s => s.Label));
             WriteItem(headerSignalsLabel);
             
             var trandsducerTypes = edf.Signals.Select(s => s.TransducerType);
-            WriteItem(trandsducerTypes);
+			if (concatAnnotationsSignal)
+				trandsducerTypes = trandsducerTypes.Concat(edf.AnnotationSignals.Select(s => s.TransducerType));
+			WriteItem(trandsducerTypes);
 
             var physicalDimensions = edf.Signals.Select(s => s.PhysicalDimension);
-            WriteItem(physicalDimensions);
+			if (concatAnnotationsSignal)
+				physicalDimensions = physicalDimensions.Concat(edf.AnnotationSignals.Select(s => s.PhysicalDimension));
+			WriteItem(physicalDimensions);
 
             var physicalMinimums = edf.Signals.Select(s => s.PhysicalMinimum);
-            WriteItem(physicalMinimums);
+			if (concatAnnotationsSignal)
+				physicalMinimums = physicalMinimums.Concat(edf.AnnotationSignals.Select(s => s.PhysicalMinimum));
+			WriteItem(physicalMinimums);
 
             var physicalMaximuns = edf.Signals.Select(s => s.PhysicalMaximum);
-            WriteItem(physicalMaximuns);
+			if (concatAnnotationsSignal)
+				physicalMaximuns = physicalMaximuns.Concat(edf.AnnotationSignals.Select(s => s.PhysicalMaximum));
+			WriteItem(physicalMaximuns);
 
             var digitalMinimuns = edf.Signals.Select(s => s.DigitalMinimum);
+			if (concatAnnotationsSignal)
+				digitalMinimuns = digitalMinimuns.Concat(edf.AnnotationSignals.Select(s => s.DigitalMinimum));
             WriteItem(digitalMinimuns);
 
             var digitalMaximuns = edf.Signals.Select(s => s.DigitalMaximum);
+			if (concatAnnotationsSignal)
+				digitalMaximuns = digitalMaximuns.Concat(edf.AnnotationSignals.Select(s => s.DigitalMaximum));
             WriteItem(digitalMaximuns);
 
             var prefilterings = edf.Signals.Select(s => s.Prefiltering);
-            WriteItem(prefilterings);
+			if (concatAnnotationsSignal)
+				prefilterings = prefilterings.Concat(edf.AnnotationSignals.Select(s => s.Prefiltering));
+			WriteItem(prefilterings);
 
             var samplesCountPerRecords = edf.Signals.Select(s => s.NumberOfSamplesInDataRecord);
+			if (concatAnnotationsSignal)
+				samplesCountPerRecords = samplesCountPerRecords.Concat(edf.AnnotationSignals.Select(s => s.NumberOfSamplesInDataRecord));
             WriteItem(samplesCountPerRecords);
 
             var reservedValues = edf.Signals.Select(s => s.Reserved);
+			if (concatAnnotationsSignal)
+				reservedValues = reservedValues.Concat(edf.AnnotationSignals.Select(s => s.Reserved));
             WriteItem(reservedValues);
 
             Debug.WriteLine("Writer position after header: " + BaseStream.Position);
