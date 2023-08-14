@@ -5,11 +5,11 @@
 		<AssemblyTitle>EDFCSharp</AssemblyTitle>
 		<AssemblyName>EDFCSharp</AssemblyName>
 		<RootNamespace>EDFCSharp</RootNamespace>
-		<Company>Lior Banai</Company>
-		<Product>EDF</Product>
-		<Version>0.6.2</Version>
+		<Company>StagPoint</Company>
+		<Product>StagPoint.EDF.NET</Product>
+		<Version>0.6.3</Version>
 		<Description>Read and write EDF signal files.</Description>
-		<Copyright>Copyright © 2022</Copyright>
+		<Copyright>Copyright © 2023</Copyright>
 		<SignAssembly>false</SignAssembly>
 		<DelaySign>false</DelaySign>
 		<Platforms>AnyCPU;x86;x64</Platforms>
@@ -18,7 +18,7 @@
 		<Company>LiorBanai</Company>
 		<Product>EDF-CSharp</Product>
 		<Description>C# Implementation of the EDF (European Data Format) Format</Description>
-		<Copyright>Lior Banai @ 2020-2022</Copyright>
+		<Copyright>Lior Banai @ 2020-2022, subsequent changes StagPoint 2023</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/LiorBanai/EDF</PackageProjectUrl>
 		<PackageIcon>EDFCSharp.png</PackageIcon>
