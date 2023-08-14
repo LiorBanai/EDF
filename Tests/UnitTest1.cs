@@ -172,9 +172,8 @@ namespace EDFSharpTests
             }
             var edf = new EDFFile(filename);
             Assert.IsTrue(edf.AnnotationSignals.Sum(a => a.SamplesCount) == 2);
-
-        }
-        [TestMethod]
+		}
+		[TestMethod]
         public void ReadAnnotationAndSignalsFile2()
         {
             string filename = Path.Combine(Environment.CurrentDirectory, "files", "annotations_and_signals2.EDF");
@@ -200,6 +199,74 @@ namespace EDFSharpTests
             Console.WriteLine(edf.Header.TotalDurationInSeconds);
             TimeSpan t = TimeSpan.FromSeconds(edf.Header.TotalDurationInSeconds);
             Console.WriteLine(t);
+        }
+
+		[TestMethod]
+		public void ParsePatientInformationFromFileHeader()
+		{
+			string filename = Path.Combine(Environment.CurrentDirectory, "files", "annotations_and_signals.EDF");
+			if (!File.Exists(filename))
+			{
+				return;
+			}
+			var edf = new EDFFile(filename);
+			Assert.IsTrue(edf.AnnotationSignals.Sum(a => a.SamplesCount) == 2);
+
+			var patientInfo = (PatientIdentification)edf.Header.PatientID;
+			Assert.IsTrue(patientInfo.BirthDate.Equals(new DateTime(1969, 6, 30)));
+			Assert.AreEqual(patientInfo.PatientName, string.Empty);
+			Assert.AreEqual(patientInfo.Code, string.Empty);
+			Assert.AreEqual(patientInfo.Sex, string.Empty);
+
+			filename = Path.Combine(Environment.CurrentDirectory, "files", "annotations_and_signals2.EDF");
+			if (!File.Exists(filename))
+			{
+				return;
+			}
+			edf = new EDFFile(filename);
+
+			patientInfo = (PatientIdentification)edf.Header.PatientID;
+			Assert.IsTrue(patientInfo.BirthDate == null);
+			Assert.AreEqual(patientInfo.PatientName, "Female57yrs");
+			Assert.AreEqual(patientInfo.Code, string.Empty);
+			Assert.AreEqual(patientInfo.Sex, "F");
+		}
+		
+        [TestMethod]
+        public void RoundtripParsePatientIdentification()
+        {
+			var patientInfo = new PatientIdentification("1234", "M", new DateTime(1971, 10, 1), "John Doe");
+            var compare = PatientIdentification.Parse(patientInfo.ToString());
+
+			assertEqual(patientInfo, compare);
+
+            patientInfo.AddField("Test", "Additional Subfield 1");
+            patientInfo.AddField("Test2", "AddSub2");
+			compare = PatientIdentification.Parse(patientInfo.ToString());
+			assertEqual(patientInfo, compare);
+
+			patientInfo.Sex = string.Empty;
+            patientInfo.Code = string.Empty;
+			compare = PatientIdentification.Parse(patientInfo.ToString());
+			assertEqual(patientInfo, compare);
+
+            patientInfo.BirthDate = null;
+			compare = PatientIdentification.Parse(patientInfo.ToString());
+			assertEqual(patientInfo, compare);
+
+			void assertEqual( PatientIdentification expected, PatientIdentification actual )
+            {
+                Assert.AreEqual(expected.Code, actual.Code);
+                Assert.AreEqual(expected.Sex, actual.Sex);  
+                Assert.AreEqual(expected.PatientName, actual.PatientName);
+                Assert.AreEqual(expected.BirthDate, actual.BirthDate);
+
+                Assert.AreEqual( expected.AdditionalSubfields.Count, actual.AdditionalSubfields.Count);
+                for (int i = 0; i < expected.AdditionalSubfields.Count; i++)
+                {
+                    Assert.AreEqual(expected.AdditionalSubfields[i], actual.AdditionalSubfields[i]);
+                }
+            }
         }
     }
 }

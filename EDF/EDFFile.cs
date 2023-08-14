@@ -20,7 +20,7 @@ namespace EDFCSharp
         public EDFSignal[] Signals { get; private set; }
         public List<AnnotationSignal> AnnotationSignals { get; private set; }
         public List<TAL> AllAnnotations => AnnotationSignals.SelectMany(a => a.Samples).ToList();
-        private Reader Reader { get; set; }
+        private EDFReader Reader { get; set; }
 
         public EDFFile()
         {
@@ -78,7 +78,7 @@ namespace EDFCSharp
         public void Open(string filePath)
         {
             // Open file
-            Reader = new Reader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            Reader = new EDFReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
             Header = Reader.ReadHeader();
             Signals = Reader.AllocateSignals(Header);
         }
@@ -111,7 +111,7 @@ namespace EDFCSharp
 
         public static EDFHeader ReadHeader(string filename)
         {
-            using (var reader = new Reader(File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            using (var reader = new EDFReader(File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                 return reader.ReadHeader();
             }
@@ -122,7 +122,7 @@ namespace EDFCSharp
         /// <param name="edfFilePath"></param>
         public void ReadAll(string edfFilePath)
         {
-            using (var reader = new Reader(File.Open(edfFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            using (var reader = new EDFReader(File.Open(edfFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                 Header = reader.ReadHeader();
                 var result = reader.ReadSignals(Header);
@@ -137,7 +137,7 @@ namespace EDFCSharp
         /// <param name="edfBytes"></param>
         public void ReadAll(byte[] edfBytes)
         {
-            using (var reader = new Reader(edfBytes))
+            using (var reader = new EDFReader(edfBytes))
             {
                 Header = reader.ReadHeader();
                 var result = reader.ReadSignals(Header);

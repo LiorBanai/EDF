@@ -11,10 +11,10 @@ namespace EDFCSharp
     /// <summary>
     /// EDF+ file reader
     /// </summary>
-    internal class Reader : BinaryReader
+    internal class EDFReader : BinaryReader
     {
-        public Reader(FileStream fs) : base(fs) { }
-        public Reader(byte[] edfBytes) : base(new MemoryStream(edfBytes)) { }
+        public EDFReader(FileStream fs) : base(fs) { }
+        public EDFReader(byte[] edfBytes) : base(new MemoryStream(edfBytes)) { }
 
         public EDFHeader ReadHeader()
         {
