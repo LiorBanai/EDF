@@ -9,7 +9,7 @@ Support for writing was left in place but is untested and most certainly broken.
 This project is provided under the terms of the [MIT license](http://choosealicense.com/licenses/mit/).
 
 # Binary Distribution
-The easiest way to make use of this library in your own project is to add a reference to the following [NuGet package](https://www.nuget.org/packages/EDF-CSharp/).
+The easiest way to make use of this library in your own project is to add a reference to the following [NuGet package](https://www.nuget.org/packages/StagPoint.EDF.Net/).
 
 # European Data Format
 
