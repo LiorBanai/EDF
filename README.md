@@ -1,16 +1,5 @@
 <h1 align="center">EDF-CSharp: C# EDF Implementation <img src="./Assets/EDF.png" align="right" width="155px" height="155px"></h1> 
 
-[![.NET Core Desktop](https://github.com/LiorBanai/EDF/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/LiorBanai/EDF/actions/workflows/dotnet-desktop.yml)
-<a href="https://github.com/LiorBanai/EDF/issues">
-    <img src="https://img.shields.io/github/issues/LiorBanai/EDF"  alt="Issues"/>
-</a> ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/LiorBanai/EDF)
-<a href="https://github.com/LiorBanai/EDF/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/LiorBanai/EDF"  alt="License"/>
-</a>
-[![Nuget](https://img.shields.io/nuget/v/EDF-CSharp)](https://www.nuget.org/packages/EDF-CSharp/)
-[![Nuget](https://img.shields.io/nuget/dt/EDF-CSharp)](https://www.nuget.org/packages/EDF-CSharp/) [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=MCP57TBRAAVXA&no_recurring=0&item_name=Support+Open+source+Projects+%28Analogy+Log+Viewer%2C+HDF5-CSHARP%2C+etc%29&currency_code=USD) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F77IVQT)
-
-
 # Summary
 
 SharpLibEuropeanDataFormat allows you to read EDF files typically used in medical applications.
